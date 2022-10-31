@@ -149,7 +149,7 @@ func (h Handler) UpdateArticle(c *gin.Context) {
 	}
 	updated, err := h.IM.GetArticleByID(article.ID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errors.New("Not found!"))
+		c.JSON(http.StatusBadRequest, errors.New("not found"))
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"data":    updated,
