@@ -179,7 +179,7 @@ func (h Handler) DeleteAuthor(c *gin.Context) {
 	err = h.IM.DeleteAuthor(author.ID)
 	if err != nil {
 		c.JSON(http.StatusNotFound, models.JSONErrorResponse{
-			Error: "Author have been deleted already1!"})
+			Error: "Author have been deleted already!"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{

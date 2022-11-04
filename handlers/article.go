@@ -43,13 +43,13 @@ func (h Handler) CreateArticle(c *gin.Context) {
 	article, err := h.IM.GetArticleByID(id.String())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.JSONErrorResponse{
-			Error: err.Error(),
+			Error: "getarticleErr",
 		})
 		return
 	}
 
 	c.JSON(http.StatusCreated, models.JSONResponse{
-		Message: "Article | GetList",
+		Message: "Article | Created",
 		Data:    article,
 	})
 }

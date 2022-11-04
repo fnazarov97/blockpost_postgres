@@ -1,8 +1,6 @@
 package postgres
 
 import (
-	"fmt"
-
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
@@ -18,7 +16,6 @@ func InitDB() (p *Postgres, err error) {
 	if err != nil {
 		return p, err
 	}
-	fmt.Println("ok-------------------")
 	return &Postgres{
 		DB: db,
 	}, nil

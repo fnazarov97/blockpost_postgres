@@ -3,7 +3,6 @@ package postgres
 import (
 	"article/models"
 	"errors"
-	"fmt"
 )
 
 // AddAuthor ...
@@ -17,14 +16,45 @@ func (p Postgres) AddAuthor(id string, entity models.CreateAuthorModel) error {
 }
 
 // GetAuthorByID ...
-func (p Postgres) GetAuthorByID(id string) (models.Author, error) {
-	var result models.Author
-	row := p.DB.QueryRow("SELECT * FROM author WHERE id=$1", id)
+func (p Postgres) GetAuthorByID(id string) (models.AuthorWithArticles, error) {
+	var result models.AuthorWithArticles
+	row := p.DB.QueryRow("SELECT * FROM author WHERE deleted_at is null and id=$1", id)
 	err := row.Scan(&result.ID, &result.Firstname, &result.Lastname, &result.CreatedAt, &result.UpdatedAt, &result.DeletedAt)
 	if err != nil {
 		return result, err
 	}
+	result.Articles, err = p.GetArticlesByAuthorID(id)
+	if err != nil {
+		return result, err
+	}
 	return result, nil
+}
+
+// GetArticlesByAuthorID ...
+func (p Postgres) GetArticlesByAuthorID(id string) (resp []models.Article, err error) {
+	rows, err := p.DB.Queryx(`SELECT 
+									 id, 
+									 title, 
+									 body, 
+									 author_id, 
+									 created_at, 
+									 updated_at,
+									 deleted_at  
+							FROM article
+							WHERE deleted_at is NULL and author_id = $1 `, id)
+	if err != nil {
+		return resp, err
+	}
+	for rows.Next() {
+		var row models.Article
+		err := rows.Scan(&row.ID, &row.Content.Title, &row.Content.Body,
+			&row.AuthorID, &row.CreatedAt, &row.UpdatedAt, &row.DeletedAt)
+		if err != nil {
+			return resp, err
+		}
+		resp = append(resp, row)
+	}
+	return resp, err
 }
 
 // GetAuthorList ...
@@ -94,7 +124,6 @@ func (p Postgres) DeleteAuthor(id string) error {
 	}
 
 	n, err := res.RowsAffected()
-	fmt.Println(n)
 	if err != nil {
 		return err
 	}
