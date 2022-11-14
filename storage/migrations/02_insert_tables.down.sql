@@ -1,0 +1,8 @@
+BEGIN;
+
+DELETE FROM article WHERE id = 'c9ded5e8-94db-4a19-9a29-86858878f346';
+DELETE FROM article WHERE id = 'e05f4dca-c92c-478c-8820-df5705190e8c';
+DELETE FROM author WHERE id = 'd0d9c394-f22a-4ead-b71d-9e5a825565a6';
+DELETE FROM author WHERE id = '81d41ef3-7d71-4631-87c5-c8c087f464cb';
+
+COMMIT;

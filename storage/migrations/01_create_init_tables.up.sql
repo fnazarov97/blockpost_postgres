@@ -1,3 +1,5 @@
+BEGIN;
+
 CREATE TABLE author (
 	id CHAR(36) PRIMARY KEY,
 	firstname VARCHAR(255) NOT NULL,
@@ -16,3 +18,5 @@ CREATE TABLE article (
 	updated_at TIMESTAMP,
 	deleted_at TIMESTAMP
 );
+
+COMMIT;

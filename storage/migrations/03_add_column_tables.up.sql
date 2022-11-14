@@ -1,0 +1,5 @@
+BEGIN;
+
+ALTER TABLE author ADD COLUMN middlename VARCHAR(150);
+
+COMMIT;
