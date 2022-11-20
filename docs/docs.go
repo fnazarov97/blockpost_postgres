@@ -568,31 +568,20 @@ const docTemplate = `{
         "models.Author": {
             "type": "object",
             "required": [
-                "firstname",
-                "lastname"
+                "fullname"
             ],
             "properties": {
                 "created_at": {
                     "type": "string"
                 },
-                "firstname": {
+                "fullname": {
                     "type": "string",
-                    "maxLength": 50,
+                    "maxLength": 255,
                     "minLength": 2,
-                    "example": "John"
+                    "example": "John Doe Steve"
                 },
                 "id": {
                     "type": "string"
-                },
-                "lastname": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 2,
-                    "example": "Doe"
-                },
-                "middlename": {
-                    "type": "string",
-                    "example": "Johnovich"
                 },
                 "updated_at": {
                     "type": "string"
@@ -619,25 +608,14 @@ const docTemplate = `{
         "models.CreateAuthorModel": {
             "type": "object",
             "required": [
-                "firstname",
-                "lastname"
+                "fullname"
             ],
             "properties": {
-                "firstname": {
+                "fullname": {
                     "type": "string",
-                    "maxLength": 50,
+                    "maxLength": 255,
                     "minLength": 2,
-                    "example": "John"
-                },
-                "lastname": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 2,
-                    "example": "Doe"
-                },
-                "middlename": {
-                    "type": "string",
-                    "example": "Johnovich"
+                    "example": "John Doe Steve"
                 }
             }
         },
@@ -724,28 +702,17 @@ const docTemplate = `{
         "models.UpdateAuthorModel": {
             "type": "object",
             "required": [
-                "firstname",
-                "lastname"
+                "fullname"
             ],
             "properties": {
-                "firstname": {
+                "fullname": {
                     "type": "string",
-                    "maxLength": 50,
+                    "maxLength": 255,
                     "minLength": 2,
-                    "example": "John"
+                    "example": "John Doe Steve"
                 },
                 "id": {
                     "type": "string"
-                },
-                "lastname": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 2,
-                    "example": "Doe"
-                },
-                "middlename": {
-                    "type": "string",
-                    "example": "Johnovich"
                 }
             }
         }

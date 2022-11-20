@@ -8,7 +8,7 @@ import (
 // AddAuthor ...
 func (p Postgres) AddAuthor(id string, entity models.CreateAuthorModel) error {
 	_, err := p.DB.Exec(`Insert into author(id, fullname, created_at) 
-							VALUES($1,$2,$3,now())`, id, entity.Fullname)
+							VALUES($1,$2,now())`, id, entity.Fullname)
 	if err != nil {
 		return err
 	}
