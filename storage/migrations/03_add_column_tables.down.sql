@@ -1,5 +1,5 @@
 BEGIN;
 
-ALTER TABLE author DROP COLUMN IF EXISTS middlename;
+ALTER TABLE author DROP COLUMN middlename;
 
 COMMIT;

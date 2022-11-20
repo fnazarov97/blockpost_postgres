@@ -7,8 +7,8 @@ import (
 
 // AddAuthor ...
 func (p Postgres) AddAuthor(id string, entity models.CreateAuthorModel) error {
-	_, err := p.DB.Exec(`Insert into author(id, firstname, middlename, lastname, created_at) 
-							VALUES($1,$2,$3, $4,now())`, id, entity.Firstname, entity.Middlename, entity.Lastname)
+	_, err := p.DB.Exec(`Insert into author(id, fullname, created_at) 
+							VALUES($1,$2,$3,now())`, id, entity.Fullname)
 	if err != nil {
 		return err
 	}
@@ -18,12 +18,8 @@ func (p Postgres) AddAuthor(id string, entity models.CreateAuthorModel) error {
 // GetAuthorByID ...
 func (p Postgres) GetAuthorByID(id string) (models.AuthorWithArticles, error) {
 	var result models.AuthorWithArticles
-	var tempname *string
 	row := p.DB.QueryRow("SELECT * FROM author WHERE deleted_at is null and id=$1", id)
-	err := row.Scan(&result.ID, &result.Firstname, &result.Lastname, &result.CreatedAt, &result.UpdatedAt, &result.DeletedAt, &tempname)
-	if tempname != nil {
-		result.Middlename = *tempname
-	}
+	err := row.Scan(&result.ID, &result.CreatedAt, &result.UpdatedAt, &result.DeletedAt, &result.Fullname)
 	if err != nil {
 		return result, err
 	}
@@ -63,16 +59,13 @@ func (p Postgres) GetArticlesByAuthorID(id string) (resp []models.Article, err e
 
 // GetAuthorList ...
 func (p Postgres) GetAuthorList(offset, limit int, search string) (resp []models.Author, err error) {
-	var tempname *string
 	rows, err := p.DB.Queryx(`SELECT
 	id,
-	firstname,
-	middlename,
-	lastname,
+	fullname,
 	created_at,
 	updated_at,
 	deleted_at 
-	FROM author WHERE deleted_at IS NULL AND ((firstname ILIKE '%' || $1 || '%') OR (lastname ILIKE '%' || $1 || '%'))
+	FROM author WHERE deleted_at IS NULL AND (fullname ILIKE '%' || $1 || '%')
 	LIMIT $2
 	OFFSET $3
 	`, search, limit, offset)
@@ -85,16 +78,11 @@ func (p Postgres) GetAuthorList(offset, limit int, search string) (resp []models
 
 		err := rows.Scan(
 			&a.ID,
-			&a.Firstname,
-			&tempname,
-			&a.Lastname,
+			&a.Fullname,
 			&a.CreatedAt,
 			&a.UpdatedAt,
 			&a.DeletedAt,
 		)
-		if tempname != nil {
-			a.Middlename = *tempname
-		}
 		if err != nil {
 			return resp, err
 		}
@@ -106,11 +94,9 @@ func (p Postgres) GetAuthorList(offset, limit int, search string) (resp []models
 
 // UpdateAuthor ...
 func (p Postgres) UpdateAuthor(req models.UpdateAuthorModel) error {
-	res, err := p.DB.NamedExec("UPDATE author  SET firstname=:f, middlename =:m, lastname=:l, updated_at=now() WHERE deleted_at IS NULL AND id=:id", map[string]interface{}{
+	res, err := p.DB.NamedExec("UPDATE author  SET fullname=:f, updated_at=now() WHERE deleted_at IS NULL AND id=:id", map[string]interface{}{
 		"id": req.ID,
-		"f":  req.Firstname,
-		"m":  req.Middlename,
-		"l":  req.Lastname,
+		"f":  req.Fullname,
 	})
 	if err != nil {
 		return err

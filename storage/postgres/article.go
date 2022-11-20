@@ -30,8 +30,7 @@ func (p *Postgres) GetArticleByID(id string) (models.PackedArticleModel, error) 
 								ar.created_at, 
 								ar.updated_at,
 								ar.deleted_at,
-								au.firstname,
-								au.lastname,
+								au.fullname,
 								au.created_at,
 								au.updated_at, 
 								au.deleted_at
@@ -40,9 +39,8 @@ func (p *Postgres) GetArticleByID(id string) (models.PackedArticleModel, error) 
 		&result.ID, &result.Content.Title,
 		&result.Content.Body, &result.Author.ID,
 		&result.CreatedAt, &result.UpdatedAt, &result.DeletedAt,
-		&result.Author.Firstname, &result.Author.Lastname,
-		&result.Author.CreatedAt, &result.Author.UpdatedAt,
-		&result.Author.DeletedAt)
+		&result.Author.Fullname, &result.Author.CreatedAt,
+		&result.Author.UpdatedAt, &result.Author.DeletedAt)
 	fmt.Println(err)
 	if err != nil {
 		return result, err
