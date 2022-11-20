@@ -13,17 +13,9 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @contact.name  API Article
-// @contact.url   https://john.doe.com
-// @contact.email john.doe@swagger.io
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
-	// programmatically set swagger info
-	docs.SwaggerInfo.Title = "Swagger Example API"
-	docs.SwaggerInfo.Description = "This is a sample server Petstore server."
-	docs.SwaggerInfo.Version = "2.0"
-
 	conf := config.Load()
 	AUTH := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
@@ -33,6 +25,11 @@ func main() {
 		conf.PostgresPassword,
 		conf.PostgresDatabase,
 	)
+
+	// programmatically set swagger info
+	docs.SwaggerInfo.Title = conf.App
+	docs.SwaggerInfo.Version = conf.AppVersion
+
 	var DB storage.StorageI
 	var err error
 	DB, err = postgres.InitDB(AUTH)
@@ -40,9 +37,18 @@ func main() {
 		panic(err)
 	}
 	h := handlers.Handler{
-		IM: DB,
+		IM:   DB,
+		Conf: conf,
 	}
-	router := gin.Default()
+	if conf.Environment != "development" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	router := gin.New()
+
+	if conf.Environment != "production" {
+		router.Use(gin.Logger(), gin.Recovery()) // Later they will be replaced by custom Logger and Recovery
+	}
 	v1 := router.Group("/v2")
 	{
 		v1.POST("/article", h.CreateArticle)

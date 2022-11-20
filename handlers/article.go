@@ -95,8 +95,8 @@ func (h Handler) GetArticleByID(c *gin.Context) {
 // @Success     200    {object} models.JSONResponse{data=[]models.Article}
 // @Router      /v2/article [get]
 func (h Handler) GetArticleList(c *gin.Context) {
-	offsetStr := c.DefaultQuery("offset", "0")
-	limitStr := c.DefaultQuery("limit", "10")
+	offsetStr := c.DefaultQuery("offset", h.Conf.DefaultOffset)
+	limitStr := c.DefaultQuery("limit", h.Conf.DefaultLimit)
 	searchStr := c.DefaultQuery("search", "")
 	offset, err := strconv.Atoi(offsetStr)
 	if err != nil {

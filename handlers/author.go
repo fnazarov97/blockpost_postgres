@@ -93,10 +93,9 @@ func (h Handler) GetAuthorByID(c *gin.Context) {
 // @Success     200    {object} models.JSONResponse{data=[]models.Author}
 // @Router      /v2/author [get]
 func (h Handler) GetAuthorList(c *gin.Context) {
-	offsetStr := c.DefaultQuery("offset", "0")
-	limitStr := c.DefaultQuery("limit", "10")
+	offsetStr := c.DefaultQuery("offset", h.Conf.DefaultOffset)
+	limitStr := c.DefaultQuery("limit", h.Conf.DefaultLimit)
 	search := c.DefaultQuery("search", "")
-
 	offset, err := strconv.Atoi(offsetStr)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.JSONErrorResponse{

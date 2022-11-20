@@ -10,6 +10,15 @@ import (
 
 // Config ...
 type Config struct {
+	App         string
+	AppVersion  string
+	Environment string // development, staging, production
+
+	HTTPPort string
+
+	DefaultOffset string
+	DefaultLimit  string
+
 	PostgresHost     string
 	PostgresPort     int
 	PostgresDatabase string
@@ -24,6 +33,14 @@ func Load() Config {
 	}
 
 	config := Config{}
+	config.App = cast.ToString(getOrReturnDefaultValue("APP", "blockpost_rest_API"))
+	config.AppVersion = cast.ToString(getOrReturnDefaultValue("APP_VERSION", "1.0.1"))
+	config.Environment = cast.ToString(getOrReturnDefaultValue("ENVIRONMENT", "development"))
+
+	config.HTTPPort = cast.ToString(getOrReturnDefaultValue("HTTP_PORT", ":7070"))
+
+	config.DefaultOffset = cast.ToString(getOrReturnDefaultValue("DEFAULT_OFFSET", "0"))
+	config.DefaultLimit = cast.ToString(getOrReturnDefaultValue("DEFAULT_LIMIT", "10"))
 
 	config.PostgresHost = cast.ToString(getOrReturnDefaultValue("POSTGRES_HOST", "127.0.0.1"))
 	config.PostgresPort = cast.ToInt(getOrReturnDefaultValue("POSTGRES_PORT", 5432))
